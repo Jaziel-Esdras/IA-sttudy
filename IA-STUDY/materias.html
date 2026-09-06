@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matérias | IA de Estudos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="background-glow glow-one"></div>
+    <div class="background-glow glow-two"></div>
+
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">AI</div>
+          <div>
+            <p class="eyebrow">assistente</p>
+            <h1>StudyFlow</h1>
+          </div>
+        </div>
+
+        <nav class="menu">
+          <a class="menu-item" href="index.html">Dashboard</a>
+          <a class="menu-item active" href="materias.html">Matérias</a>
+          <a class="menu-item" href="links.html">Links</a>
+          <a class="menu-item" href="checklist.html">Checklist</a>
+        </nav>
+
+        <div class="stats-mini">
+          <div class="mini-card">
+            <span>Matérias</span>
+            <strong id="subjectCount">0</strong>
+          </div>
+          <div class="mini-card accent">
+            <span>Prioridade</span>
+            <strong id="topPriority">-</strong>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Gerenciamento</p>
+            <h2>Matérias</h2>
+          </div>
+          <a class="pill-button" href="index.html">Voltar ao dashboard</a>
+        </header>
+
+        <section class="content-grid single-column">
+          <div class="form-panel">
+            <div class="panel-header">
+              <h3>Adicionar matéria</h3>
+            </div>
+
+            <form id="topicForm" class="stacked-form">
+              <label>
+                Nome da matéria
+                <input type="text" id="topicName" placeholder="Ex: Química" required />
+              </label>
+
+              <div class="two-col">
+                <label>
+                  Prioridade
+                  <input type="number" id="topicPriority" min="1" max="5" value="3" required />
+                </label>
+                <label>
+                  Duração (min)
+                  <input type="number" id="topicMinutes" min="10" value="45" required />
+                </label>
+              </div>
+
+              <label>
+                Nível
+                <select id="topicDifficulty">
+                  <option value="baixa">Baixa</option>
+                  <option value="média" selected>Média</option>
+                  <option value="alta">Alta</option>
+                </select>
+              </label>
+
+              <button type="submit" class="primary-button">Salvar matéria</button>
+            </form>
+          </div>
+        </section>
+
+        <section class="data-panel full-width-panel">
+          <div class="panel-header">
+            <h3>Todas as matérias</h3>
+          </div>
+          <div id="subjectsGrid" class="all-subjects-grid"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+      const topicForm = document.getElementById('topicForm');
+      const subjectsGrid = document.getElementById('subjectsGrid');
+      const subjectCount = document.getElementById('subjectCount');
+      const topPriority = document.getElementById('topPriority');
+
+      function renderSubjects() {
+        const data = StudyFlow.getData();
+        const topics = data.topics;
+
+        subjectCount.textContent = String(topics.length);
+        topPriority.textContent = topics.length ? `${Math.max(...topics.map((topic) => topic.priority))}` : '-';
+
+        if (!topics.length) {
+          subjectsGrid.innerHTML = '<div class="subject-card"><h4>Nenhuma matéria cadastrada</h4><span class="subject-meta">Adicione uma disciplina para começar.</span></div>';
+          return;
+        }
+
+        subjectsGrid.innerHTML = topics.map((topic) => `
+          <div class="subject-card">
+            <h4>${topic.name}</h4>
+            <span class="subject-meta">Prioridade ${topic.priority}</span>
+            <span class="subject-meta">Tempo: ${topic.estimatedMinutes} min</span>
+            <span class="subject-meta">Nível: ${topic.difficulty}</span>
+            <button type="button">Acessar matéria</button>
+          </div>
+        `).join('');
+      }
+
+      topicForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const name = document.getElementById('topicName').value.trim();
+        const priority = Number(document.getElementById('topicPriority').value || 1);
+        const estimatedMinutes = Number(document.getElementById('topicMinutes').value || 30);
+        const difficulty = document.getElementById('topicDifficulty').value;
+
+        if (!name) return;
+
+        const data = StudyFlow.getData();
+        const newTopic = {
+          id: Date.now(),
+          name,
+          priority,
+          estimatedMinutes,
+          difficulty,
+          completed: false
+        };
+
+        data.topics.push(newTopic);
+        StudyFlow.saveData(data);
+        topicForm.reset();
+        document.getElementById('topicPriority').value = 3;
+        document.getElementById('topicMinutes').value = 45;
+        renderSubjects();
+      });
+
+      renderSubjects();
+    </script>
+  </body>
+</html>

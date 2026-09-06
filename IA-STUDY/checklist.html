@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checklist | IA de Estudos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="background-glow glow-one"></div>
+    <div class="background-glow glow-two"></div>
+
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">AI</div>
+          <div>
+            <p class="eyebrow">assistente</p>
+            <h1>StudyFlow</h1>
+          </div>
+        </div>
+
+        <nav class="menu">
+          <a class="menu-item" href="index.html">Dashboard</a>
+          <a class="menu-item" href="materias.html">Matérias</a>
+          <a class="menu-item" href="links.html">Links</a>
+          <a class="menu-item active" href="checklist.html">Checklist</a>
+        </nav>
+
+        <div class="stats-mini">
+          <div class="mini-card">
+            <span>Checklist</span>
+            <strong id="taskCount">0</strong>
+          </div>
+          <div class="mini-card accent">
+            <span>Concluídas</span>
+            <strong id="doneCount">0</strong>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Organização</p>
+            <h2>Checklist de estudo</h2>
+          </div>
+          <a class="pill-button" href="index.html">Voltar ao dashboard</a>
+        </header>
+
+        <section class="content-grid single-column">
+          <div class="form-panel">
+            <div class="panel-header">
+              <h3>Adicionar tarefa</h3>
+            </div>
+
+            <form id="taskForm" class="stacked-form">
+              <label>
+                Título da tarefa
+                <input type="text" id="taskTitle" placeholder="Ex: Revisar capítulo 3" required />
+              </label>
+
+              <div class="two-col">
+                <label>
+                  Prioridade
+                  <select id="taskPriority">
+                    <option value="alta">Alta</option>
+                    <option value="média" selected>Média</option>
+                    <option value="baixa">Baixa</option>
+                  </select>
+                </label>
+                <label>
+                  Situação
+                  <select id="taskDone">
+                    <option value="false">Pendente</option>
+                    <option value="true">Concluída</option>
+                  </select>
+                </label>
+              </div>
+
+              <button type="submit" class="primary-button">Salvar tarefa</button>
+            </form>
+          </div>
+        </section>
+
+        <section class="data-panel full-width-panel">
+          <div class="panel-header">
+            <h3>Lista de tarefas</h3>
+          </div>
+          <ul id="taskList" class="list-card"></ul>
+        </section>
+      </main>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+      const taskForm = document.getElementById('taskForm');
+      const taskList = document.getElementById('taskList');
+      const taskCount = document.getElementById('taskCount');
+      const doneCount = document.getElementById('doneCount');
+
+      function renderTasks() {
+        const data = StudyFlow.getData();
+        const tasks = data.tasks;
+
+        taskCount.textContent = String(tasks.length);
+        doneCount.textContent = String(tasks.filter((task) => task.done).length);
+
+        if (!tasks.length) {
+          taskList.innerHTML = '<li><strong>Nenhuma tarefa cadastrada</strong><span>Crie seu primeiro checklist para acompanhar o estudo.</span></li>';
+          return;
+        }
+
+        taskList.innerHTML = tasks.map((task) => `
+          <li>
+            <strong>${task.title}</strong>
+            <span>Prioridade: ${task.priority} • ${task.done ? 'Concluída' : 'Pendente'}</span>
+          </li>
+        `).join('');
+      }
+
+      taskForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const title = document.getElementById('taskTitle').value.trim();
+        const priority = document.getElementById('taskPriority').value;
+        const done = document.getElementById('taskDone').value === 'true';
+
+        if (!title) return;
+
+        const data = StudyFlow.getData();
+        data.tasks.push({ id: Date.now(), title, priority, done });
+        StudyFlow.saveData(data);
+        taskForm.reset();
+        renderTasks();
+      });
+
+      renderTasks();
+    </script>
+  </body>
+</html>

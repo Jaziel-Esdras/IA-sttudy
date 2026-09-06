@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IA de Estudos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="background-glow glow-one"></div>
+    <div class="background-glow glow-two"></div>
+
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">AI</div>
+          <div>
+            <p class="eyebrow">assistente</p>
+            <h1>StudyFlow</h1>
+          </div>
+        </div>
+
+        <nav class="menu">
+          <a class="menu-item active" href="index.html">Dashboard</a>
+          <a class="menu-item" href="materias.html">Matérias</a>
+          <a class="menu-item" href="todas-materias.html">Todas as matérias</a>
+          <a class="menu-item" href="links.html">Links</a>
+          <a class="menu-item" href="checklist.html">Checklist</a>
+        </nav>
+
+        <div class="stats-mini">
+          <div class="mini-card">
+            <span>Meta diária</span>
+            <strong id="dailyGoalLabel">120 min</strong>
+          </div>
+          <div class="mini-card accent">
+            <span>Foco do dia</span>
+            <strong id="focusLabel">3 itens</strong>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Resumo inteligente</p>
+            <h2>Seu plano de estudo</h2>
+          </div>
+          <button class="pill-button">+ Novo objetivo</button>
+        </header>
+
+        <section class="hero-panel">
+          <div class="hero-copy">
+            <p class="eyebrow accent">IA de estudos</p>
+            <h3>Organize seus estudos com foco e clareza.</h3>
+            <p>
+              Planeje matérias, agrupe materiais de apoio e receba sugestões de revisão em poucos segundos.
+            </p>
+          </div>
+          <div class="hero-score">
+            <span>Progresso</span>
+            <strong id="progressPercent">0%</strong>
+            <small id="progressText">Nenhuma tarefa concluída ainda</small>
+          </div>
+        </section>
+
+        <section class="dashboard-grid">
+          <div class="data-panel">
+            <div class="panel-header">
+              <h3>Plano do dia</h3>
+            </div>
+            <ul id="planList" class="list-card"></ul>
+          </div>
+
+          <div class="data-panel">
+            <div class="panel-header">
+              <h3>Matérias cadastradas</h3>
+            </div>
+            <div id="subjectCatalog" class="all-subjects-grid"></div>
+          </div>
+        </section>
+
+        <section class="dashboard-grid">
+          <div class="data-panel">
+            <div class="panel-header">
+              <h3>Resumo por link</h3>
+            </div>
+            <div id="linkSummary" class="link-summary"></div>
+          </div>
+
+          <div class="data-panel">
+            <div class="panel-header">
+              <h3>Resumo rápido</h3>
+            </div>
+            <div id="quickSummary" class="quick-summary"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="shared.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Links | IA de Estudos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="background-glow glow-one"></div>
+    <div class="background-glow glow-two"></div>
+
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">AI</div>
+          <div>
+            <p class="eyebrow">assistente</p>
+            <h1>StudyFlow</h1>
+          </div>
+        </div>
+
+        <nav class="menu">
+          <a class="menu-item" href="index.html">Dashboard</a>
+          <a class="menu-item" href="materias.html">Matérias</a>
+          <a class="menu-item active" href="links.html">Links</a>
+          <a class="menu-item" href="checklist.html">Checklist</a>
+        </nav>
+
+        <div class="stats-mini">
+          <div class="mini-card">
+            <span>Links</span>
+            <strong id="linkCount">0</strong>
+          </div>
+          <div class="mini-card accent">
+            <span>Categorias</span>
+            <strong id="categoryCount">0</strong>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Biblioteca</p>
+            <h2>Links de estudo</h2>
+          </div>
+          <a class="pill-button" href="index.html">Voltar ao dashboard</a>
+        </header>
+
+        <section class="content-grid single-column">
+          <div class="form-panel">
+            <div class="panel-header">
+              <h3>Adicionar material</h3>
+            </div>
+
+            <form id="linkForm" class="stacked-form">
+              <label>
+                Título
+                <input type="text" id="linkTitle" placeholder="Ex: Revisão de Álgebra" required />
+              </label>
+
+              <label>
+                URL
+                <input type="url" id="linkUrl" placeholder="https://..." required />
+              </label>
+
+              <div class="two-col">
+                <label>
+                  Categoria
+                  <input type="text" id="linkCategory" value="geral" />
+                </label>
+                <label>
+                  Tags
+                  <input type="text" id="linkTags" placeholder="ex: revisão, video" />
+                </label>
+              </div>
+
+              <button type="submit" class="secondary-button">Adicionar material</button>
+            </form>
+          </div>
+        </section>
+
+        <section class="data-panel full-width-panel">
+          <div class="panel-header">
+            <h3>Resumo de materiais</h3>
+          </div>
+          <div id="linksSummary" class="link-summary"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+      const linkForm = document.getElementById('linkForm');
+      const linksSummary = document.getElementById('linksSummary');
+      const linkCount = document.getElementById('linkCount');
+      const categoryCount = document.getElementById('categoryCount');
+
+      function summarizeLink(link) {
+        const source = new URL(link.url).hostname.replace('www.', '');
+        const tags = link.tags && link.tags.length ? link.tags.join(', ') : 'sem tags';
+        const notes = link.notes && link.notes.length ? link.notes.join(' ') : 'Nenhum comentário adicional registrado.';
+        return `Resumo do material: ${link.title} | categoria=${link.category} | fonte=${source} | tags=${tags} | principais ideias: ${notes}`;
+      }
+
+      function renderLinks() {
+        const data = StudyFlow.getData();
+        const links = data.links;
+
+        linkCount.textContent = String(links.length);
+        categoryCount.textContent = String(new Set(links.map((link) => link.category)).size);
+
+        if (!links.length) {
+          linksSummary.innerHTML = '<div class="summary-card"><strong>Nenhum link salvo</strong><p>Adicione um material para começar a biblioteca de estudo.</p></div>';
+          return;
+        }
+
+        linksSummary.innerHTML = links.map((link) => `
+          <div class="summary-card">
+            <strong>${link.title}</strong>
+            <p>${summarizeLink(link)}</p>
+          </div>
+        `).join('');
+      }
+
+      linkForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const title = document.getElementById('linkTitle').value.trim();
+        const url = document.getElementById('linkUrl').value.trim();
+        const category = document.getElementById('linkCategory').value.trim() || 'geral';
+        const tags = document.getElementById('linkTags').value.trim();
+
+        if (!title || !url) return;
+
+        const data = StudyFlow.getData();
+        data.links.push({
+          id: Date.now(),
+          title,
+          url,
+          category,
+          tags: tags ? tags.split(',').map((item) => item.trim()).filter(Boolean) : [],
+          notes: ['Material de apoio adicionado para revisão.']
+        });
+
+        StudyFlow.saveData(data);
+        linkForm.reset();
+        document.getElementById('linkCategory').value = 'geral';
+        renderLinks();
+      });
+
+      renderLinks();
+    </script>
+  </body>
+</html>
