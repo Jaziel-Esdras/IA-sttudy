@@ -98,23 +98,34 @@ const allSubjectsGrid = document.getElementById('allSubjectsGrid');
 const subjectCatalog = document.getElementById('subjectCatalog');
 const progressPercent = document.getElementById('progressPercent');
 const progressText = document.getElementById('progressText');
+const progressPercentSecondary = document.getElementById('progressPercentSecondary');
+const progressTextSecondary = document.getElementById('progressTextSecondary');
 const dailyGoalLabel = document.getElementById('dailyGoalLabel');
 const focusLabel = document.getElementById('focusLabel');
 
 function renderPlan() {
+  if (!planList) return;
+
   const plan = planner.planForDay();
   const items = plan.length
     ? plan.map((topic) => `<li><strong>${topic.name}</strong><span>${topic.estimatedMinutes} min • ${topic.difficulty}</span></li>`).join('')
     : '<li><strong>Sem tarefas no momento</strong><span>Adicione mais matérias para montar o plano.</span></li>';
 
   planList.innerHTML = items;
-  dailyGoalLabel.textContent = `${planner.dailyGoalMinutes} min`;
 
-  const focus = assistant.suggestFocus();
-  focusLabel.textContent = `${focus.length} itens`;
+  if (dailyGoalLabel) {
+    dailyGoalLabel.textContent = `${planner.dailyGoalMinutes} min`;
+  }
+
+  if (focusLabel) {
+    const focus = assistant.suggestFocus();
+    focusLabel.textContent = `${focus.length} itens`;
+  }
 }
 
 function renderLinks() {
+  if (!linkSummary) return;
+
   const summaries = planner.links.map((link) => assistant.summarizeLink(link));
 
   linkSummary.innerHTML = summaries.map((item) => `
@@ -174,13 +185,27 @@ function renderAllSubjects() {
 }
 
 function renderStatus() {
-  const status = assistant.getStatus();
-  progressPercent.textContent = `${status.percentage}%`;
-  progressText.textContent = status.completed > 0 ? `${status.completed} tarefas concluídas` : 'Nenhuma tarefa concluída ainda';
+  if (!progressPercent || !progressText) return;
 
-  const focus = assistant.suggestFocus();
-  if (focus.length) {
-    focusLabel.textContent = focus[0];
+  const status = assistant.getStatus();
+  const summaryText = status.completed > 0 ? `${status.completed} tarefas concluídas` : 'Nenhuma tarefa concluída ainda';
+
+  progressPercent.textContent = `${status.percentage}%`;
+  progressText.textContent = summaryText;
+
+  if (progressPercentSecondary) {
+    progressPercentSecondary.textContent = `${status.percentage}%`;
+  }
+
+  if (progressTextSecondary) {
+    progressTextSecondary.textContent = summaryText;
+  }
+
+  if (focusLabel) {
+    const focus = assistant.suggestFocus();
+    if (focus.length) {
+      focusLabel.textContent = focus[0];
+    }
   }
 }
 

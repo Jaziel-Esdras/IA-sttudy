@@ -10,91 +10,76 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="background-glow glow-one"></div>
-    <div class="background-glow glow-two"></div>
+    <div class="preview-stage">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="background-glow glow-one"></div>
+          <div class="background-glow glow-two"></div>
 
-    <div class="app-shell">
-      <aside class="sidebar">
-        <div class="brand">
-          <div class="brand-mark">AI</div>
-          <div>
-            <p class="eyebrow">assistente</p>
-            <h1>StudyFlow</h1>
-          </div>
-        </div>
+          <div class="app-shell mobile-shell">
+            <header class="mobile-header">
+              <div class="brand-mini">
+                <span class="brand-mark">AI</span>
+                <div>
+                  <small>StudyFlow</small>
+                  <strong>Matérias</strong>
+                </div>
+              </div>
+              <button class="icon-button" type="button">+</button>
+            </header>
 
-        <nav class="menu">
-          <a class="menu-item" href="index.html">Dashboard</a>
-          <a class="menu-item active" href="materias.html">Matérias</a>
-          <a class="menu-item" href="links.html">Links</a>
-          <a class="menu-item" href="checklist.html">Checklist</a>
-        </nav>
+            <nav class="mobile-tabs" aria-label="Navegação principal">
+              <a class="tab" href="index.html">Hoje</a>
+              <a class="tab active" href="materias.html">Matérias</a>
+              <a class="tab" href="links.html">Links</a>
+              <a class="tab" href="checklist.html">Checklist</a>
+            </nav>
 
-        <div class="stats-mini">
-          <div class="mini-card">
-            <span>Matérias</span>
-            <strong id="subjectCount">0</strong>
-          </div>
-          <div class="mini-card accent">
-            <span>Prioridade</span>
-            <strong id="topPriority">-</strong>
-          </div>
-        </div>
-      </aside>
-
-      <main class="main-panel">
-        <header class="topbar">
-          <div>
-            <p class="eyebrow">Gerenciamento</p>
-            <h2>Matérias</h2>
-          </div>
-          <a class="pill-button" href="index.html">Voltar ao dashboard</a>
-        </header>
-
-        <section class="content-grid single-column">
-          <div class="form-panel">
-            <div class="panel-header">
-              <h3>Adicionar matéria</h3>
-            </div>
-
-            <form id="topicForm" class="stacked-form">
-              <label>
-                Nome da matéria
-                <input type="text" id="topicName" placeholder="Ex: Química" required />
-              </label>
-
-              <div class="two-col">
-                <label>
-                  Prioridade
-                  <input type="number" id="topicPriority" min="1" max="5" value="3" required />
-                </label>
-                <label>
-                  Duração (min)
-                  <input type="number" id="topicMinutes" min="10" value="45" required />
-                </label>
+            <section class="panel">
+              <div class="panel-head">
+                <h3>Adicionar matéria</h3>
               </div>
 
-              <label>
-                Nível
-                <select id="topicDifficulty">
-                  <option value="baixa">Baixa</option>
-                  <option value="média" selected>Média</option>
-                  <option value="alta">Alta</option>
-                </select>
-              </label>
+              <form id="topicForm" class="form-stack">
+                <label class="form-field">
+                  Nome da matéria
+                  <input type="text" id="topicName" placeholder="Ex: Química" required />
+                </label>
 
-              <button type="submit" class="primary-button">Salvar matéria</button>
-            </form>
-          </div>
-        </section>
+                <div class="two-col">
+                  <label class="form-field">
+                    Prioridade
+                    <input type="number" id="topicPriority" min="1" max="5" value="3" required />
+                  </label>
+                  <label class="form-field">
+                    Duração (min)
+                    <input type="number" id="topicMinutes" min="10" value="45" required />
+                  </label>
+                </div>
 
-        <section class="data-panel full-width-panel">
-          <div class="panel-header">
-            <h3>Todas as matérias</h3>
+                <label class="form-field">
+                  Nível
+                  <select id="topicDifficulty">
+                    <option value="baixa">Baixa</option>
+                    <option value="média" selected>Média</option>
+                    <option value="alta">Alta</option>
+                  </select>
+                </label>
+
+                <button type="submit" class="primary-button">Salvar matéria</button>
+              </form>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <h3>Matérias</h3>
+                <strong id="subjectCount" class="accent-text">0</strong>
+              </div>
+              <div id="subjectsGrid" class="subjects-grid"></div>
+            </section>
           </div>
-          <div id="subjectsGrid" class="all-subjects-grid"></div>
-        </section>
-      </main>
+        </div>
+      </div>
     </div>
 
     <script src="shared.js"></script>
@@ -102,17 +87,15 @@
       const topicForm = document.getElementById('topicForm');
       const subjectsGrid = document.getElementById('subjectsGrid');
       const subjectCount = document.getElementById('subjectCount');
-      const topPriority = document.getElementById('topPriority');
 
       function renderSubjects() {
         const data = StudyFlow.getData();
-        const topics = data.topics;
+        const topics = data.topics || [];
 
         subjectCount.textContent = String(topics.length);
-        topPriority.textContent = topics.length ? `${Math.max(...topics.map((topic) => topic.priority))}` : '-';
 
         if (!topics.length) {
-          subjectsGrid.innerHTML = '<div class="subject-card"><h4>Nenhuma matéria cadastrada</h4><span class="subject-meta">Adicione uma disciplina para começar.</span></div>';
+          subjectsGrid.innerHTML = '<div class="empty-state">Nenhuma matéria cadastrada. Adicione uma disciplina para começar.</div>';
           return;
         }
 
@@ -122,7 +105,7 @@
             <span class="subject-meta">Prioridade ${topic.priority}</span>
             <span class="subject-meta">Tempo: ${topic.estimatedMinutes} min</span>
             <span class="subject-meta">Nível: ${topic.difficulty}</span>
-            <button type="button">Acessar matéria</button>
+            <a href="index.html">Acessar matéria</a>
           </div>
         `).join('');
       }

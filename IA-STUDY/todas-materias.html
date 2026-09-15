@@ -10,72 +10,56 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="background-glow glow-one"></div>
-    <div class="background-glow glow-two"></div>
+    <div class="preview-stage">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="background-glow glow-one"></div>
+          <div class="background-glow glow-two"></div>
 
-    <div class="app-shell">
-      <aside class="sidebar">
-        <div class="brand">
-          <div class="brand-mark">AI</div>
-          <div>
-            <p class="eyebrow">assistente</p>
-            <h1>StudyFlow</h1>
+          <div class="app-shell mobile-shell">
+            <header class="mobile-header">
+              <div class="brand-mini">
+                <span class="brand-mark">AI</span>
+                <div>
+                  <small>StudyFlow</small>
+                  <strong>Catalogo</strong>
+                </div>
+              </div>
+              <button class="icon-button" type="button">+</button>
+            </header>
+
+            <nav class="mobile-tabs" aria-label="Navegação principal">
+              <a class="tab" href="index.html">Hoje</a>
+              <a class="tab active" href="todas-materias.html">Matérias</a>
+              <a class="tab" href="links.html">Links</a>
+              <a class="tab" href="checklist.html">Checklist</a>
+            </nav>
+
+            <section class="panel">
+              <div class="panel-head">
+                <h3>Lista completa</h3>
+                <strong id="totalMaterias" class="accent-text">0</strong>
+              </div>
+              <div id="catalogGrid" class="subjects-grid"></div>
+            </section>
           </div>
         </div>
-
-        <nav class="menu">
-          <a class="menu-item" href="index.html">Dashboard</a>
-          <a class="menu-item" href="materias.html">Matérias</a>
-          <a class="menu-item active" href="todas-materias.html">Todas as matérias</a>
-          <a class="menu-item" href="links.html">Links</a>
-          <a class="menu-item" href="checklist.html">Checklist</a>
-        </nav>
-
-        <div class="stats-mini">
-          <div class="mini-card">
-            <span>Matérias</span>
-            <strong id="totalMaterias">0</strong>
-          </div>
-          <div class="mini-card accent">
-            <span>Tempo total</span>
-            <strong id="tempoTotal">0 min</strong>
-          </div>
-        </div>
-      </aside>
-
-      <main class="main-panel">
-        <header class="topbar">
-          <div>
-            <p class="eyebrow">Catálogo</p>
-            <h2>Todas as matérias</h2>
-          </div>
-          <a class="pill-button" href="index.html">Voltar</a>
-        </header>
-
-        <section class="data-panel full-width-panel">
-          <div class="panel-header">
-            <h3>Lista completa</h3>
-          </div>
-          <div id="catalogGrid" class="all-subjects-grid"></div>
-        </section>
-      </main>
+      </div>
     </div>
 
     <script src="shared.js"></script>
     <script>
       const catalogGrid = document.getElementById('catalogGrid');
       const totalMaterias = document.getElementById('totalMaterias');
-      const tempoTotal = document.getElementById('tempoTotal');
 
       function renderCatalog() {
         const data = StudyFlow.getData();
         const topics = data.topics || [];
 
         totalMaterias.textContent = String(topics.length);
-        tempoTotal.textContent = `${topics.reduce((sum, item) => sum + Number(item.estimatedMinutes || 0), 0)} min`;
 
         if (!topics.length) {
-          catalogGrid.innerHTML = '<div class="subject-card"><h4>Nenhuma matéria adicionada</h4><span class="subject-meta">Cadastre sua primeira disciplina no dashboard.</span></div>';
+          catalogGrid.innerHTML = '<div class="empty-state">Nenhuma matéria adicionada. Cadastre sua primeira disciplina na página de matérias.</div>';
           return;
         }
 
@@ -86,7 +70,7 @@
             <span class="subject-meta">Duração: ${topic.estimatedMinutes} min</span>
             <span class="subject-meta">Nível: ${topic.difficulty}</span>
             <span class="subject-meta">Status: ${topic.completed ? 'Concluída' : 'Pendente'}</span>
-            <button type="button">Abrir</button>
+            <a href="materias.html">Abrir</a>
           </div>
         `).join('');
       }

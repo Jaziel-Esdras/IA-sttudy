@@ -10,87 +10,72 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="background-glow glow-one"></div>
-    <div class="background-glow glow-two"></div>
+    <div class="preview-stage">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="background-glow glow-one"></div>
+          <div class="background-glow glow-two"></div>
 
-    <div class="app-shell">
-      <aside class="sidebar">
-        <div class="brand">
-          <div class="brand-mark">AI</div>
-          <div>
-            <p class="eyebrow">assistente</p>
-            <h1>StudyFlow</h1>
-          </div>
-        </div>
+          <div class="app-shell mobile-shell">
+            <header class="mobile-header">
+              <div class="brand-mini">
+                <span class="brand-mark">AI</span>
+                <div>
+                  <small>StudyFlow</small>
+                  <strong>Links</strong>
+                </div>
+              </div>
+              <button class="icon-button" type="button">+</button>
+            </header>
 
-        <nav class="menu">
-          <a class="menu-item" href="index.html">Dashboard</a>
-          <a class="menu-item" href="materias.html">Matérias</a>
-          <a class="menu-item active" href="links.html">Links</a>
-          <a class="menu-item" href="checklist.html">Checklist</a>
-        </nav>
+            <nav class="mobile-tabs" aria-label="Navegação principal">
+              <a class="tab" href="index.html">Hoje</a>
+              <a class="tab" href="materias.html">Matérias</a>
+              <a class="tab active" href="links.html">Links</a>
+              <a class="tab" href="checklist.html">Checklist</a>
+            </nav>
 
-        <div class="stats-mini">
-          <div class="mini-card">
-            <span>Links</span>
-            <strong id="linkCount">0</strong>
-          </div>
-          <div class="mini-card accent">
-            <span>Categorias</span>
-            <strong id="categoryCount">0</strong>
-          </div>
-        </div>
-      </aside>
-
-      <main class="main-panel">
-        <header class="topbar">
-          <div>
-            <p class="eyebrow">Biblioteca</p>
-            <h2>Links de estudo</h2>
-          </div>
-          <a class="pill-button" href="index.html">Voltar ao dashboard</a>
-        </header>
-
-        <section class="content-grid single-column">
-          <div class="form-panel">
-            <div class="panel-header">
-              <h3>Adicionar material</h3>
-            </div>
-
-            <form id="linkForm" class="stacked-form">
-              <label>
-                Título
-                <input type="text" id="linkTitle" placeholder="Ex: Revisão de Álgebra" required />
-              </label>
-
-              <label>
-                URL
-                <input type="url" id="linkUrl" placeholder="https://..." required />
-              </label>
-
-              <div class="two-col">
-                <label>
-                  Categoria
-                  <input type="text" id="linkCategory" value="geral" />
-                </label>
-                <label>
-                  Tags
-                  <input type="text" id="linkTags" placeholder="ex: revisão, video" />
-                </label>
+            <section class="panel">
+              <div class="panel-head">
+                <h3>Adicionar material</h3>
               </div>
 
-              <button type="submit" class="secondary-button">Adicionar material</button>
-            </form>
-          </div>
-        </section>
+              <form id="linkForm" class="form-stack">
+                <label class="form-field">
+                  Título
+                  <input type="text" id="linkTitle" placeholder="Ex: Revisão de Álgebra" required />
+                </label>
 
-        <section class="data-panel full-width-panel">
-          <div class="panel-header">
-            <h3>Resumo de materiais</h3>
+                <label class="form-field">
+                  URL
+                  <input type="url" id="linkUrl" placeholder="https://..." required />
+                </label>
+
+                <div class="two-col">
+                  <label class="form-field">
+                    Categoria
+                    <input type="text" id="linkCategory" value="geral" />
+                  </label>
+                  <label class="form-field">
+                    Tags
+                    <input type="text" id="linkTags" placeholder="ex: revisão, vídeo" />
+                  </label>
+                </div>
+
+                <button type="submit" class="secondary-button">Adicionar material</button>
+              </form>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <h3>Materiais salvos</h3>
+                <strong id="linkCount" class="accent-text">0</strong>
+              </div>
+              <div id="linksSummary" class="resource-list"></div>
+            </section>
           </div>
-          <div id="linksSummary" class="link-summary"></div>
-        </section>
-      </main>
+        </div>
+      </div>
     </div>
 
     <script src="shared.js"></script>
@@ -98,7 +83,6 @@
       const linkForm = document.getElementById('linkForm');
       const linksSummary = document.getElementById('linksSummary');
       const linkCount = document.getElementById('linkCount');
-      const categoryCount = document.getElementById('categoryCount');
 
       function summarizeLink(link) {
         const source = new URL(link.url).hostname.replace('www.', '');
@@ -109,20 +93,22 @@
 
       function renderLinks() {
         const data = StudyFlow.getData();
-        const links = data.links;
+        const links = data.links || [];
 
         linkCount.textContent = String(links.length);
-        categoryCount.textContent = String(new Set(links.map((link) => link.category)).size);
 
         if (!links.length) {
-          linksSummary.innerHTML = '<div class="summary-card"><strong>Nenhum link salvo</strong><p>Adicione um material para começar a biblioteca de estudo.</p></div>';
+          linksSummary.innerHTML = '<div class="empty-state">Nenhum material salvo ainda. Adicione um link para começar sua biblioteca.</div>';
           return;
         }
 
         linksSummary.innerHTML = links.map((link) => `
-          <div class="summary-card">
+          <div class="summary-card resource-card">
             <strong>${link.title}</strong>
+            <span class="meta">${link.category}</span>
             <p>${summarizeLink(link)}</p>
+            <div class="tags">${(link.tags || []).map((tag) => `<span class="tag">${tag}</span>`).join('')}</div>
+            <a href="${link.url}" target="_blank" rel="noreferrer">Abrir material</a>
           </div>
         `).join('');
       }

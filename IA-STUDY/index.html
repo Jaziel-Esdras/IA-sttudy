@@ -10,95 +10,71 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="background-glow glow-one"></div>
-    <div class="background-glow glow-two"></div>
+    <div class="preview-stage">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="background-glow glow-one"></div>
+          <div class="background-glow glow-two"></div>
 
-    <div class="app-shell">
-      <aside class="sidebar">
-        <div class="brand">
-          <div class="brand-mark">AI</div>
-          <div>
-            <p class="eyebrow">assistente</p>
-            <h1>StudyFlow</h1>
+          <div class="app-shell mobile-shell">
+            <header class="mobile-header">
+              <div class="brand-mini">
+                <span class="brand-mark">AI</span>
+                <div>
+                  <small>StudyFlow</small>
+                  <strong>Hoje</strong>
+                </div>
+              </div>
+              <button class="icon-button" type="button">+</button>
+            </header>
+
+            <nav class="mobile-tabs" aria-label="Navegação principal">
+              <a class="tab active" href="index.html">Hoje</a>
+              <a class="tab" href="materias.html">Matérias</a>
+              <a class="tab" href="links.html">Links</a>
+              <a class="tab" href="checklist.html">Checklist</a>
+            </nav>
+
+            <section class="hero-card">
+              <div class="hero-topline">
+                <span>Meta do dia</span>
+                <strong id="dailyGoalLabel">120 min</strong>
+              </div>
+              <h1>Foco e organização para estudar melhor.</h1>
+              <div class="progress-row">
+                <span>Progresso</span>
+                <strong id="progressPercent">0%</strong>
+              </div>
+              <small id="progressText">Nenhuma tarefa concluída ainda</small>
+            </section>
+
+            <section class="stats-row">
+              <article class="mini-stat accent-stat">
+                <span>Foco</span>
+                <strong id="focusLabel">3 itens</strong>
+              </article>
+              <article class="mini-stat">
+                <span>Resumo</span>
+                <strong>2h</strong>
+              </article>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <h3>Plano do dia</h3>
+              </div>
+              <ul id="planList" class="list-card compact-list"></ul>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <h3>Matérias</h3>
+              </div>
+              <div id="subjectCatalog" class="subject-chips"></div>
+            </section>
           </div>
         </div>
-
-        <nav class="menu">
-          <a class="menu-item active" href="index.html">Dashboard</a>
-          <a class="menu-item" href="materias.html">Matérias</a>
-          <a class="menu-item" href="todas-materias.html">Todas as matérias</a>
-          <a class="menu-item" href="links.html">Links</a>
-          <a class="menu-item" href="checklist.html">Checklist</a>
-        </nav>
-
-        <div class="stats-mini">
-          <div class="mini-card">
-            <span>Meta diária</span>
-            <strong id="dailyGoalLabel">120 min</strong>
-          </div>
-          <div class="mini-card accent">
-            <span>Foco do dia</span>
-            <strong id="focusLabel">3 itens</strong>
-          </div>
-        </div>
-      </aside>
-
-      <main class="main-panel">
-        <header class="topbar">
-          <div>
-            <p class="eyebrow">Resumo inteligente</p>
-            <h2>Seu plano de estudo</h2>
-          </div>
-          <button class="pill-button">+ Novo objetivo</button>
-        </header>
-
-        <section class="hero-panel">
-          <div class="hero-copy">
-            <p class="eyebrow accent">IA de estudos</p>
-            <h3>Organize seus estudos com foco e clareza.</h3>
-            <p>
-              Planeje matérias, agrupe materiais de apoio e receba sugestões de revisão em poucos segundos.
-            </p>
-          </div>
-          <div class="hero-score">
-            <span>Progresso</span>
-            <strong id="progressPercent">0%</strong>
-            <small id="progressText">Nenhuma tarefa concluída ainda</small>
-          </div>
-        </section>
-
-        <section class="dashboard-grid">
-          <div class="data-panel">
-            <div class="panel-header">
-              <h3>Plano do dia</h3>
-            </div>
-            <ul id="planList" class="list-card"></ul>
-          </div>
-
-          <div class="data-panel">
-            <div class="panel-header">
-              <h3>Matérias cadastradas</h3>
-            </div>
-            <div id="subjectCatalog" class="all-subjects-grid"></div>
-          </div>
-        </section>
-
-        <section class="dashboard-grid">
-          <div class="data-panel">
-            <div class="panel-header">
-              <h3>Resumo por link</h3>
-            </div>
-            <div id="linkSummary" class="link-summary"></div>
-          </div>
-
-          <div class="data-panel">
-            <div class="panel-header">
-              <h3>Resumo rápido</h3>
-            </div>
-            <div id="quickSummary" class="quick-summary"></div>
-          </div>
-        </section>
-      </main>
+      </div>
     </div>
 
     <script src="shared.js"></script>
