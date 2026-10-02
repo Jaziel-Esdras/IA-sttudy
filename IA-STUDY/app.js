@@ -299,9 +299,55 @@ function init() {
 
   const topicForm = document.getElementById('topicForm');
   const linkForm = document.getElementById('linkForm');
+  const askForm = document.getElementById('askForm');
 
   if (topicForm) topicForm.addEventListener('submit', handleTopicSubmit);
   if (linkForm) linkForm.addEventListener('submit', handleLinkSubmit);
+  if (askForm) askForm.addEventListener('submit', handleAskSubmit);
 }
 
 init();
+
+// --- Assistant integration ---
+async function handleAskSubmit(event) {
+  event.preventDefault();
+
+  const prompt = document.getElementById('askPrompt').value.trim();
+  const category = document.getElementById('askCategory').value.trim() || null;
+  if (!prompt) return;
+
+  try {
+    const res = await fetch('/api/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt, category }),
+    });
+    if (!res.ok) throw new Error('Erro ao consultar assistente');
+    const data = await res.json();
+    renderAssistant(data);
+  } catch (err) {
+    const el = document.getElementById('assistantSummary');
+    if (el) el.innerHTML = `<div class="empty-state">Não foi possível contactar o backend: ${err.message}</div>`;
+  }
+}
+
+function renderAssistant(data) {
+  const el = document.getElementById('assistantSummary');
+  if (!el) return;
+
+  const resumo = data.resumo || data.summary || '';
+  const links = data.video_links || data.videoLinks || [];
+
+  el.innerHTML = `
+    <div class="summary-card">
+      <strong>Resumo</strong>
+      <p>${resumo}</p>
+    </div>
+    <div class="summary-card">
+      <strong>Vídeos / Materiais sugeridos</strong>
+      <ul>
+        ${links.map((l) => `<li><a href="${l}" target="_blank" rel="noreferrer">${l}</a></li>`).join('')}
+      </ul>
+    </div>
+  `;
+}

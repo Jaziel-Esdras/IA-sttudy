@@ -68,6 +68,25 @@
 
             <section class="panel">
               <div class="panel-head">
+                <h3>Assistente</h3>
+              </div>
+              <form id="askForm" class="form-stack">
+                <label class="form-field">
+                  Pergunta / Pedido
+                  <input type="text" id="askPrompt" placeholder="Ex: Me ajude a revisar álgebra linear" required />
+                </label>
+                <label class="form-field">
+                  Categoria (opcional)
+                  <input type="text" id="askCategory" placeholder="matematica" />
+                </label>
+                <button type="submit" class="secondary-button">Enviar ao assistente</button>
+              </form>
+
+              <div id="assistantSummary" class="resource-list" style="margin-top:12px"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
                 <h3>Matérias</h3>
               </div>
               <div id="subjectCatalog" class="subject-chips"></div>
