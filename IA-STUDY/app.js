@@ -502,7 +502,8 @@ async function handleAskSubmit(event) {
   if (!prompt) return;
 
   try {
-    const res = await fetch('/api/ask', {
+    const apiBase = (window.STUDYFLOW_API_BASE_URL || '').replace(/\/$/, '');
+    const res = await fetch(`${apiBase}/api/ask`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt, category }),
@@ -511,8 +512,12 @@ async function handleAskSubmit(event) {
     const data = await res.json();
     renderAssistant(data);
   } catch (err) {
-    const el = document.getElementById('assistantSummary');
-    if (el) el.innerHTML = `<div class="empty-state">Não foi possível contactar o backend: ${err.message}</div>`;
+    const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(prompt)}`;
+    renderAssistant({
+      resumo: `Resumo local para “${prompt}”. Para obter uma resposta mais completa e salvar o histórico, conecte o backend do StudyFlow.`,
+      video_links: [searchUrl],
+      localFallback: true,
+    });
   }
 }
 
@@ -522,16 +527,27 @@ function renderAssistant(data) {
 
   const resumo = data.resumo || data.summary || '';
   const links = data.video_links || data.videoLinks || [];
+  const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[char]);
+  const safeLinks = links.map((link) => {
+    try {
+      const url = new URL(link);
+      return ['http:', 'https:'].includes(url.protocol) ? url.href : null;
+    } catch {
+      return null;
+    }
+  }).filter(Boolean);
 
   el.innerHTML = `
     <div class="summary-card">
-      <strong>Resumo</strong>
-      <p>${resumo}</p>
+      <strong>${data.localFallback ? 'Resumo local' : 'Resumo'}</strong>
+      <p>${escapeHtml(resumo)}</p>
     </div>
     <div class="summary-card">
       <strong>Vídeos / Materiais sugeridos</strong>
       <ul>
-        ${links.map((l) => `<li><a href="${l}" target="_blank" rel="noreferrer">${l}</a></li>`).join('')}
+        ${safeLinks.map((link) => `<li><a href="${escapeHtml(link)}" target="_blank" rel="noreferrer">${escapeHtml(link)}</a></li>`).join('')}
       </ul>
     </div>
   `;

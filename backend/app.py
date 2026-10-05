@@ -8,6 +8,7 @@ from urllib.parse import quote_plus
 from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 
@@ -15,6 +16,22 @@ BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "study_history.db"
 
 app = FastAPI(title="IA Study API", version="1.0.0")
+
+cors_origins = [
+    origin.strip()
+    for origin in os.environ.get(
+        "CORS_ORIGINS",
+        "https://flowsttuffyyy.com,http://localhost:8000,http://127.0.0.1:8000",
+    ).split(",")
+    if origin.strip()
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=cors_origins,
+    allow_credentials=False,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
+)
 
 
 class AskRequest(BaseModel):
