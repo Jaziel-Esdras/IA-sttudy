@@ -26,6 +26,9 @@ window.StudyFlow = (() => {
         notes: ['Conceitos básicos e principais civilizações.']
       }
     ],
+    dailyGoalMinutes: 120,
+    studySessions: [],
+    activeStudyTimer: null,
     tasks: [
       { id: 1, title: 'Revisar exercícios de matemática', done: false, priority: 'alta' },
       { id: 2, title: 'Ler resumo de história', done: false, priority: 'média' },
@@ -44,7 +47,10 @@ window.StudyFlow = (() => {
       return {
         topics: parsed.topics || [],
         links: parsed.links || [],
-        tasks: parsed.tasks || []
+        tasks: parsed.tasks || [],
+        dailyGoalMinutes: Number(parsed.dailyGoalMinutes) > 0 ? Number(parsed.dailyGoalMinutes) : 120,
+        studySessions: Array.isArray(parsed.studySessions) ? parsed.studySessions : [],
+        activeStudyTimer: parsed.activeStudyTimer || null
       };
     } catch (error) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultData));

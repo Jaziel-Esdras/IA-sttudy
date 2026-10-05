@@ -54,8 +54,8 @@
                 <strong id="focusLabel">3 itens</strong>
               </article>
               <article class="mini-stat">
-                <span>Resumo</span>
-                <strong>2h</strong>
+                <span>Estudo nesta semana</span>
+                <strong id="weeklyStudyStat">0 min</strong>
               </article>
             </section>
 
@@ -90,6 +90,45 @@
                 <h3>Matérias</h3>
               </div>
               <div id="subjectCatalog" class="subject-chips"></div>
+            </section>
+
+            <section id="studyGamification" class="panel gamification-panel">
+              <div class="panel-head gamification-title-row">
+                <div><span class="eyebrow">SUA JORNADA</span><h3>Metas e tempo de estudo</h3></div>
+                <span id="studyLevel" class="level-pill">Nível 1</span>
+              </div>
+              <div class="study-dashboard">
+                <div class="study-control-column">
+                  <form id="studyGoalForm" class="goal-form">
+                    <label for="studyGoalInput">Meta diária</label>
+                    <div class="goal-input-row"><input id="studyGoalInput" type="number" min="15" max="600" step="5" value="120" /><span>minutos</span><button type="submit" class="ghost-button">Salvar</button></div>
+                  </form>
+                  <div class="today-progress-card">
+                    <div class="today-progress-heading"><div><span>HOJE</span><strong id="todayStudyTime">0 min</strong></div><b id="todayGoalPercent">0%</b></div>
+                    <div class="study-progress-track"><div id="todayGoalProgress" class="study-progress-fill"></div></div>
+                    <p id="todayGoalMessage">Registre sua primeira sessão para começar.</p>
+                  </div>
+                  <label class="form-field study-subject-field">Matéria da sessão<select id="studySubject"><option value="">Estudo livre</option></select></label>
+                  <button id="studyTimerButton" type="button" class="primary-button timer-button">▶ Iniciar cronômetro</button>
+                  <p id="studyTimerStatus" class="timer-status">O tempo será salvo quando você encerrar a sessão.</p>
+                  <form id="quickStudyForm" class="quick-study-form">
+                    <label for="quickStudyMinutes">Registrar tempo estudado</label>
+                    <div class="goal-input-row"><input id="quickStudyMinutes" type="number" min="1" max="720" placeholder="Minutos" required /><button type="submit" class="secondary-button">Adicionar sessão</button></div>
+                  </form>
+                </div>
+                <div class="study-history-column">
+                  <div class="weekly-comparison-card">
+                    <div><span>ÚLTIMOS 7 DIAS</span><strong id="weeklyStudyTime">0 min</strong></div>
+                    <div class="weekly-comparison-divider"></div>
+                    <div><span>7 DIAS ANTERIORES</span><strong id="previousWeeklyStudyTime">0 min</strong></div>
+                    <p id="weeklyComparisonText">Registre sessões para comparar seu ritmo.</p>
+                  </div>
+                  <div class="study-chart-heading"><h4>Seu ritmo diário</h4><span>minutos estudados</span></div>
+                  <div id="studyChart" class="study-chart" role="img" aria-label="Gráfico de minutos estudados nos últimos sete dias"></div>
+                  <div class="streak-row"><span>🔥 Sequência de metas</span><strong id="studyStreak">0 dias</strong></div>
+                  <div id="studyBadges" class="study-badges" aria-live="polite"></div>
+                </div>
+              </div>
             </section>
           </div>
         </div>

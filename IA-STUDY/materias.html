@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Matérias | IA de Estudos</title>
+    <title>Matérias | StudyFlow</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -11,133 +11,129 @@
   </head>
   <body>
     <div class="preview-stage">
-      <div class="phone-frame">
-        <div class="phone-screen">
-          <div class="background-glow glow-one"></div>
-          <div class="background-glow glow-two"></div>
-
-          <div class="app-shell mobile-shell">
-            <header class="mobile-header">
-              <div class="brand-mini">
-                <img class="brand-logo" src="logo-study-flow.png" alt="StudyFlow" />
-                <div>
-                  <small>StudyFlow</small>
-                  <strong>Matérias</strong>
-                </div>
-              </div>
-              <button class="icon-button" type="button">+</button>
-            </header>
-
-            <nav class="mobile-tabs" aria-label="Navegação principal">
-              <a class="tab" href="index.html">Hoje</a>
-              <a class="tab active" href="materias.html">Matérias</a>
-              <a class="tab" href="links.html">Links</a>
-              <a class="tab" href="checklist.html">Checklist</a>
-            </nav>
-
-            <section class="panel">
-              <div class="panel-head">
-                <h3>Adicionar matéria</h3>
-              </div>
-
-              <form id="topicForm" class="form-stack">
-                <label class="form-field">
-                  Nome da matéria
-                  <input type="text" id="topicName" placeholder="Ex: Química" required />
-                </label>
-
-                <div class="two-col">
-                  <label class="form-field">
-                    Prioridade
-                    <input type="number" id="topicPriority" min="1" max="5" value="3" required />
-                  </label>
-                  <label class="form-field">
-                    Duração (min)
-                    <input type="number" id="topicMinutes" min="10" value="45" required />
-                  </label>
-                </div>
-
-                <label class="form-field">
-                  Nível
-                  <select id="topicDifficulty">
-                    <option value="baixa">Baixa</option>
-                    <option value="média" selected>Média</option>
-                    <option value="alta">Alta</option>
-                  </select>
-                </label>
-
-                <button type="submit" class="primary-button">Salvar matéria</button>
-              </form>
-            </section>
-
-            <section class="panel">
-              <div class="panel-head">
-                <h3>Matérias</h3>
-                <strong id="subjectCount" class="accent-text">0</strong>
-              </div>
-              <div id="subjectsGrid" class="subjects-grid"></div>
-            </section>
-          </div>
+      <div class="phone-frame"><div class="phone-screen">
+        <div class="app-shell mobile-shell subjects-page">
+          <header class="mobile-header">
+            <div class="brand-mini"><img class="brand-logo" src="logo-study-flow.png" alt="StudyFlow" /><div><small>StudyFlow</small><strong>Matérias</strong></div></div>
+            <button class="icon-button" id="addSubjectToggle" type="button" aria-label="Adicionar matéria">+</button>
+          </header>
+          <nav class="mobile-tabs" aria-label="Navegação principal">
+            <a class="tab" href="index.html">Hoje</a><a class="tab active" href="materias.html">Matérias</a><a class="tab" href="links.html">Links</a><a class="tab" href="checklist.html">Checklist</a>
+          </nav>
+          <section class="subject-intro">
+            <div><span class="eyebrow">Seu espaço de aprendizagem</span><h1>Explore as matérias</h1><p>Escolha uma disciplina, encontre um assunto e avance pelos subtópicos com materiais de estudo.</p></div>
+            <div class="subject-total"><strong id="subjectCount">16</strong><span>disciplinas</span></div>
+          </section>
+          <section class="subject-explorer" aria-live="polite">
+            <div class="explorer-heading"><div><span class="eyebrow" id="selectionEyebrow">DISCIPLINAS</span><h2 id="selectionTitle">O que você quer estudar?</h2></div><button id="backButton" class="back-button" type="button" hidden>← Voltar</button></div>
+            <p class="explorer-description" id="selectionDescription">Selecione uma matéria para ver os assuntos gerais.</p>
+            <label class="stage-filter" id="stageFilterWrap" hidden>Etapa de ensino<select id="stageFilter"><option value="all">Fundamental II e Ensino Médio</option><option value="ef2">Fundamental II · 6º ao 9º ano</option><option value="em">Ensino Médio</option></select></label>
+            <div id="subjectsGrid" class="curriculum-grid"></div>
+            <div id="generalGrid" class="general-grid" hidden></div>
+            <div id="subtopicGrid" class="subtopic-grid" hidden></div>
+            <div id="resourcePanel" class="resource-panel" hidden></div>
+          </section>
+          <details class="custom-subject-panel" id="customSubjectPanel">
+            <summary>Adicionar matéria personalizada</summary>
+            <form id="topicForm" class="form-stack">
+              <label class="form-field">Nome da matéria<input type="text" id="topicName" placeholder="Ex.: Programação" required /></label>
+              <div class="two-col"><label class="form-field">Prioridade<input type="number" id="topicPriority" min="1" max="5" value="3" required /></label><label class="form-field">Tempo (min)<input type="number" id="topicMinutes" min="10" value="45" required /></label></div>
+              <label class="form-field">Nível<select id="topicDifficulty"><option value="baixa">Baixa</option><option value="média" selected>Média</option><option value="alta">Alta</option></select></label>
+              <button type="submit" class="primary-button">Salvar matéria</button>
+            </form>
+            <div id="customSubjects" class="custom-subject-list"></div>
+          </details>
+          <footer class="sources-note">Conteúdo organizado como roteiro de aprendizagem com referência na BNCC e na Matriz do Enem. A sequência pode variar entre redes e escolas. <a href="https://downloadbncc.mec.gov.br/" target="_blank" rel="noopener noreferrer">BNCC</a> · <a href="https://www.gov.br/inep/pt-br/centrais-de-conteudo/acervo-linha-editorial/publicacoes-institucionais/avaliacoes-e-exames-da-educacao-basica/matrizes-de-referencia-enem/" target="_blank" rel="noopener noreferrer">Matriz do Inep</a>. Cada subtópico inclui materiais de leitura e buscas de videoaulas na Khan Academy Brasil, e-Aulas USP e UNIVESP TV.</footer>
         </div>
-      </div>
+      </div></div>
     </div>
-
     <script src="shared.js"></script>
+    <script src="curriculo-enem.js"></script>
     <script>
-      const topicForm = document.getElementById('topicForm');
-      const subjectsGrid = document.getElementById('subjectsGrid');
-      const subjectCount = document.getElementById('subjectCount');
+      const curriculum = window.enemCurriculum;
+      const sources = [
+        {name:'Khan Academy', host:'pt.khanacademy.org', url:(q)=>`https://pt.khanacademy.org/search?page_search_query=${encodeURIComponent(q)}`},
+        {name:'Toda Matéria', host:'todamateria.com.br', url:(q)=>`https://www.todamateria.com.br/?s=${encodeURIComponent(q)}`},
+        {name:'Brasil Escola', host:'brasilescola.uol.com.br', url:(q)=>`https://www.google.com/search?q=${encodeURIComponent(`site:brasilescola.uol.com.br ${q}`)}`}
+      ];
+      const videoSources = [
+        {name:'Khan Academy Brasil', host:'youtube.com/@khanacademyportugues', url:(q)=>`https://www.youtube.com/@khanacademyportugues/search?query=${encodeURIComponent(q)}`},
+        {name:'e-Aulas USP', host:'eaulas.usp.br', url:(q)=>`https://www.google.com/search?q=${encodeURIComponent(`site:eaulas.usp.br/portal ${q}`)}`},
+        {name:'UNIVESP TV', host:'youtube.com', url:(q)=>`https://www.youtube.com/results?search_query=${encodeURIComponent(`UNIVESP TV ${q}`)}`}
+      ];
+      const grid = document.getElementById('subjectsGrid');
+      const generalGrid = document.getElementById('generalGrid');
+      const subtopicGrid = document.getElementById('subtopicGrid');
+      const resourcePanel = document.getElementById('resourcePanel');
+      const backButton = document.getElementById('backButton');
+      const stageFilter = document.getElementById('stageFilter');
+      const stageFilterWrap = document.getElementById('stageFilterWrap');
+      const groupTitle = (group) => group[0].replace(/^\[(EF2|EM)\]\s*/, '');
+      const groupStage = (group) => group[0].startsWith('[EF2]') ? 'ef2' : 'em';
+      let subjectIndex = -1;
+      let groupIndex = -1;
+      const escapeHTML = (value) => String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 
-      function renderSubjects() {
-        const data = StudyFlow.getData();
-        const topics = data.topics || [];
-
-        subjectCount.textContent = String(topics.length);
-
-        if (!topics.length) {
-          subjectsGrid.innerHTML = '<div class="empty-state">Nenhuma matéria cadastrada. Adicione uma disciplina para começar.</div>';
-          return;
-        }
-
-        subjectsGrid.innerHTML = topics.map((topic) => `
-          <div class="subject-card">
-            <h4>${topic.name}</h4>
-            <span class="subject-meta">Prioridade ${topic.priority}</span>
-            <span class="subject-meta">Tempo: ${topic.estimatedMinutes} min</span>
-            <span class="subject-meta">Nível: ${topic.difficulty}</span>
-            <a href="index.html">Acessar matéria</a>
-          </div>
-        `).join('');
+      function setHeading(eyebrow, title, description, back) {
+        document.getElementById('selectionEyebrow').textContent = eyebrow;
+        document.getElementById('selectionTitle').textContent = title;
+        document.getElementById('selectionDescription').textContent = description;
+        backButton.hidden = !back;
       }
-
-      topicForm.addEventListener('submit', (event) => {
+      function renderSubjects() {
+        document.querySelector('.subjects-page').classList.remove('subject-detail-view');
+        backButton.textContent = '← Todas as matérias';
+        subjectIndex = -1; groupIndex = -1;
+        setHeading('DISCIPLINAS', 'O que você quer estudar?', 'Selecione uma matéria para ver os assuntos gerais.', false);
+        grid.hidden = false; generalGrid.hidden = true; subtopicGrid.hidden = true; resourcePanel.hidden = true; stageFilterWrap.hidden = true;
+        document.getElementById('subjectCount').textContent = String(curriculum.length);
+        grid.innerHTML = curriculum.map((subject, index) => `<button class="curriculum-card tone-${subject.color}" data-subject="${index}" type="button"><span class="curriculum-icon">${subject.icon}</span><span class="curriculum-name">${escapeHTML(subject.name)}</span><span class="curriculum-count">${subject.groups.length} assuntos <span aria-hidden="true">→</span></span></button>`).join('');
+        renderCustomSubjects();
+      }
+      function openSubject(index) {
+        document.querySelector('.subjects-page').classList.add('subject-detail-view');
+        backButton.textContent = '← Todas as matérias';
+        subjectIndex = index; groupIndex = -1;
+        const subject = curriculum[index];
+        setHeading('MATÉRIA', subject.name, 'Escolha um assunto geral para explorar os subtópicos.', true);
+        grid.hidden = true; generalGrid.hidden = false; subtopicGrid.hidden = true; resourcePanel.hidden = true; stageFilterWrap.hidden = false;
+        const visibleGroups = subject.groups.map((group, i) => ({group, i})).filter(({group}) => stageFilter.value === 'all' || groupStage(group) === stageFilter.value);
+        generalGrid.innerHTML = visibleGroups.map(({group, i}, visibleIndex) => `<button class="general-card" data-group="${i}" type="button"><span class="general-number">${String(visibleIndex+1).padStart(2,'0')}</span><span class="general-text"><strong>${escapeHTML(groupTitle(group))}</strong><small>${groupStage(group) === 'ef2' ? 'Fundamental II' : 'Ensino Médio'} · ${group.length-1} subtópicos</small></span><span class="card-arrow" aria-hidden="true">→</span></button>`).join('');
+      }
+      function openGroup(index) {
+        backButton.textContent = '← Assuntos de ' + curriculum[subjectIndex].name;
+        groupIndex = index;
+        const subject = curriculum[subjectIndex], group = subject.groups[index];
+        setHeading(subject.name.toUpperCase(), groupTitle(group), 'Selecione um subtópico para encontrar materiais confiáveis.', true);
+        grid.hidden = true; generalGrid.hidden = true; subtopicGrid.hidden = false; resourcePanel.hidden = true; stageFilterWrap.hidden = true;
+        subtopicGrid.innerHTML = group.slice(1).map((item, i) => `<button class="subtopic-card" data-subtopic="${i}" type="button"><span class="subtopic-icon">${String(i+1).padStart(2,'0')}</span><span>${escapeHTML(item)}</span><span class="card-arrow" aria-hidden="true">↗</span></button>`).join('');
+      }
+      function openResources(subIndex) {
+        backButton.textContent = '← Subtópicos';
+        const subject = curriculum[subjectIndex], group = subject.groups[groupIndex], topic = group[subIndex+1];
+        setHeading('MATERIAIS DE ESTUDO', topic, `Fontes selecionadas para ${topic}.`, true);
+        const query = `${subject.name} ${topic}`;
+        resourcePanel.hidden = false;
+        const materialCards = sources.map(source => `<a class="source-card" href="${source.url(query)}" target="_blank" rel="noopener noreferrer"><span class="source-mark">↗</span><span><strong>${source.name}</strong><small>Materiais sobre “${escapeHTML(query)}”</small></span><span class="source-domain">${source.host}</span></a>`).join('');
+        const lessonCards = videoSources.map(source => `<a class="source-card video-source-card" href="${source.url(query)}" target="_blank" rel="noopener noreferrer"><span class="source-mark">▶</span><span><strong>${source.name}</strong><small>Aulas sobre “${escapeHTML(topic)}”</small></span><span class="source-domain">${source.host}</span></a>`).join('');
+        resourcePanel.innerHTML = `<section class="resource-section"><h3>Materiais de leitura e estudo</h3><div class="resource-links">${materialCards}</div></section><section class="resource-section video-lessons"><div class="video-heading"><span class="video-heading-icon">▶</span><div><h3>Aulas para assistir</h3><p>Encontre videoaulas deste assunto em plataformas educacionais e canais universitários.</p></div></div><div class="resource-links">${lessonCards}</div></section><p class="link-disclaimer">As sugestões abrem buscas pelo tema. Confira o conteúdo, o nível escolar e a autoria antes de estudar.</p>`;
+      }
+      grid.addEventListener('click', event => { const card=event.target.closest('[data-subject]'); if(card) openSubject(Number(card.dataset.subject)); });
+      generalGrid.addEventListener('click', event => { const card=event.target.closest('[data-group]'); if(card) openGroup(Number(card.dataset.group)); });
+      stageFilter.addEventListener('change', () => { if (subjectIndex >= 0 && !generalGrid.hidden) openSubject(subjectIndex); });
+      subtopicGrid.addEventListener('click', event => { const card=event.target.closest('[data-subtopic]'); if(card) openResources(Number(card.dataset.subtopic)); });
+      backButton.addEventListener('click', () => { if(resourcePanel.hidden === false) openGroup(groupIndex); else if(subtopicGrid.hidden === false) openSubject(subjectIndex); else renderSubjects(); });
+      document.getElementById('addSubjectToggle').addEventListener('click', () => { const details=document.getElementById('customSubjectPanel'); details.open=!details.open; details.scrollIntoView({behavior:'smooth',block:'center'}); });
+      function renderCustomSubjects() {
+        const items=StudyFlow.getData().topics || [];
+        document.getElementById('customSubjects').innerHTML=items.length ? `<h3>Suas matérias</h3><div class="custom-subject-grid">${items.map(topic=>`<article class="custom-subject-card"><strong>${escapeHTML(topic.name)}</strong><span>Prioridade ${escapeHTML(topic.priority)} · ${escapeHTML(topic.estimatedMinutes)} min · nível ${escapeHTML(topic.difficulty)}</span></article>`).join('')}</div>` : '';
+      }
+      document.getElementById('topicForm').addEventListener('submit', event => {
         event.preventDefault();
-
-        const name = document.getElementById('topicName').value.trim();
-        const priority = Number(document.getElementById('topicPriority').value || 1);
-        const estimatedMinutes = Number(document.getElementById('topicMinutes').value || 30);
-        const difficulty = document.getElementById('topicDifficulty').value;
-
-        if (!name) return;
-
-        const data = StudyFlow.getData();
-        const newTopic = {
-          id: Date.now(),
-          name,
-          priority,
-          estimatedMinutes,
-          difficulty,
-          completed: false
-        };
-
-        data.topics.push(newTopic);
-        StudyFlow.saveData(data);
-        topicForm.reset();
-        document.getElementById('topicPriority').value = 3;
-        document.getElementById('topicMinutes').value = 45;
-        renderSubjects();
+        const name=document.getElementById('topicName').value.trim(); if(!name) return;
+        const data=StudyFlow.getData(); data.topics.push({id:Date.now(),name,priority:Number(document.getElementById('topicPriority').value||1),estimatedMinutes:Number(document.getElementById('topicMinutes').value||30),difficulty:document.getElementById('topicDifficulty').value,completed:false});
+        StudyFlow.saveData(data); event.currentTarget.reset(); document.getElementById('topicPriority').value=3; document.getElementById('topicMinutes').value=45; renderCustomSubjects();
       });
-
       renderSubjects();
     </script>
   </body>
